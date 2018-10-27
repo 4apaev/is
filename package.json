@@ -1,0 +1,33 @@
+{
+  "name": "is",
+  "version": "1.0.0",
+  "description": "type check util",
+  "main": "is.js",
+  "author": {
+    "name": "Michael Miretski",
+    "email": "4apaev@gmail.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:4apaev/is.git"
+  },
+  "scripts": {
+    "test": "nyc mocha ./*.spec.js",
+    "coverage": "nyc report --reporter=cobertura --report-dir=./output"
+  },
+  "nyc": {
+    "check-coverage": true,
+    "per-file": true,
+    "lines": 95,
+    "statements": 95,
+    "functions": 95,
+    "branches": 95,
+    "exclude": [
+      "**/*.spec.js"
+    ]
+  },
+  "devDependencies": {
+    "mocha": "latest",
+    "nyc": "latest"
+  }
+}
