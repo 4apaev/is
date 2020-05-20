@@ -1,56 +1,50 @@
-const Is = x => x!=null
+const Is = x => x != null
+Is.asrt = (x, m) => must(x!=null, m)
 
-Is.tos = x => toString.call(x).slice(8, -1)
-Is.not = x => !Is(x)
+Is.not = x => x == null
+Is.not.asrt = (x, m) => must(x==null, m)
 
-Is.assert = (x, m) => {
-  if (!x)
-    throw new Error(m||'Fail')
+
+Is.use = (name, fnc) => {
+  Is[ name ] = fnc
+  Is[ name ].asrt = (x, m) => must(fnc(x), m)
+
+  Is.not[ name ] = x => !fnc(x)
+  Is.not[ name ].asrt = (x, m) => must(!fnc(x), m)
 }
 
-Is.not.assert = (x, m) => {
-  if (x)
-    throw new Error(m||'Fail')
-}
+Is.use('a', x => Array.isArray(x))
+Is.use('n', x => Number.isFinite(x))
+Is.use('BF', x => Buffer.isBuffer(x))
 
-Is.use = (name, cb) => {
-  Is[ name ] = cb
-  Is[ name ].assert = (x, m) => Is.assert(cb(x), m)
-  Is.not[ name ] = x => !cb(x)
-  Is.not[ name ].assert = (x, m) => Is.not.assert(cb(x), m)
-}
+Is.use('RS', x => x instanceof Stream.Readable)
+Is.use('WS', x => x instanceof Stream.Writable)
 
-Is.use('num', x => x === +x)
-Is.use('arr', x => Array.isArray(x))
-Is.use('Obj', x => Is.it(x, 'Object'))
-Is.use('obj', x => 'object' === typeof x && !!x)
-Is.use('str', x => 'string' === typeof x)
-Is.use('fnc', x => 'function' === typeof x)
-Is.use('bol', x => 'boolean' === typeof x)
+Is.use('O', x => toString.call(x) === '[object Object]')
+Is.use('o', x => 'object' === typeof x && !!x)
+Is.use('s', x => 'string' === typeof x)
+Is.use('b', x => 'boolean' === typeof x)
+Is.use('f', x => 'function' === typeof x)
+
+Is.use('ok', x => !!x)
+
 Is.use('empty', x => {
+  // noinspection LoopStatementThatDoesntLoopJS
   for (let i in x)
     return false
-  return !x || 'object' === typeof x && !!x
+  return !x || 'object' === typeof x
 })
 
-Is.eql = (a, b) => {
-  if (Object.is(a, b)) return true
-  const t = Is.tos(a)
-  if (t!==Is.tos(b)) return false
-  if (t==='Date') return  +a===+b
-  if (t==='Array') return  a.length===b.length && a.every((v, k) => Is.eql(v, b[ k ]))
-  if (t==='Object') return  Object.entries(a).every(([ k, v ]) => k in b && Is.eql(v, b[ k ]))
-  if (t==='RegExp') return  a.toString()===b.toString()
-  return a===b
+Is.get = (a, b, c) => Is.o(a)
+  ? b.split('.').every(k => Is(a=a[ k ]))
+    ? a
+    : c
+  : c
+
+function must(x, m) {
+  if (!x)
+    throw new Error(m)
 }
 
-Is.eql.assert = (a, b, m) => Is.assert(Is.eql(a, b), m)
-Is.not.eql = (a, b) => !Is.eql(a, b)
-Is.not.eql.assert = (a, b, m) => Is.assert(Is.not.eql(a, b), m)
 
-Is.it = (a, b) => Is.tos(a).toLowerCase() === b.toLowerCase()
-Is.not.it = (a, b) => !Is.it(a, b)
-Is.it.assert = (a, b, m) => Is.assert(Is.it(a, b), m)
-Is.not.it.assert = (a, b, m) => Is.assert(Is.not.it(a, b), m)
-
-module.exports = Is
+export default Is

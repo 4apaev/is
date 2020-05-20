@@ -1,3 +1,3 @@
-Is
+IS
 ==
 type check util

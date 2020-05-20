@@ -1,9 +1,7 @@
-node_modules/
-npm-debug.log
 .DS_Store
-.nyc_output
 .idea
 .vscode
+.history
+.nyc_output
 output
-coverage
-*.log
+node_modules

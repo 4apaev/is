@@ -1,241 +1,90 @@
-const assert = require('assert')
-const Is = require('./is')
+import assert from 'assert'
+import Is from './is.js'
 
-const run = (name, okArgs, nopeArgs) => {
-  describe(`Is.${ name }`, () => {
+const expect = a => ({
+  eq(e, m) {
+    assert.strictEqual(a, e, m)
+  },
 
-    const message = name
+  throws(...e) {
+    assert.throws(a, ...e)
+  },
 
-    for (const x of okArgs) {
-
-      it(`OK: Is.${ name }`, () => assert.equal(Is[ name ](x), true))
-      it(`OK: Is.not.${ name }`, () => assert.equal(Is.not[ name ](x), false))
-
-      it(`OK: Is.${ name }.assert`, () => {
-        assert.doesNotThrow(() => Is[ name ].assert(x))
-      })
-
-      it(`OK: Is.not.${ name }.assert`, () => {
-        assert.throws(() => Is.not[ name ].assert(x, message), { message })
-      })
-    }
-
-    for (const x of nopeArgs) {
-      it(`NOPE: Is.${ name }`, () => assert.equal(Is[ name ](x), false))
-      it(`NOPE: Is.not.${ name }`, () => assert.equal(Is.not[ name ](x), true))
-
-      it(`NOPE: Is.${ name }.assert`, () => {
-        assert.throws(() => Is[ name ].assert(x, message), { message })
-      })
-
-      it(`NOPE: Is.not.${ name }.assert`, () => {
-        assert.doesNotThrow(() => Is.not[ name ].assert(x))
-      })
-    }
-  })
-}
-
-run('num',[
-    0, .5, -.5
-], [
-  '0', true, false
-])
-
-run('arr', [
-  [], [1], 'qwerty'.split('')
-],[
-  'qwerty', new Set([1,2]), new Map([[1,2]]), (function() { return arguments })()
-])
-
-run('obj',[
-  [], {}, /./, new Date, new Set, new Map, Promise.resolve(1), (function() { return arguments })()
-],[
-  'qwerty', () => {}, 1, true, null, undefined
-])
-
-run('Obj',[
-  {}, { a: 1 }
-],[
-  'qwerty', () => {}, 1, true, null, undefined, [], /./, new Date, new Set, new Map, Promise.resolve(1), (function() { return arguments })()
-])
-
-run('str',[
-  'qwerty', ''
-],[
-  1, /./
-])
-
-run('fnc',[
-    () => {}
-], [
-  '0', true, false, 0, .5, -.5, null, undefined, [], /./, new Date, new Set, new Map, Promise.resolve(1), (function() { return arguments })()
-])
-
-run('bol',[
-    true, false
-], [
-  '0', 0, .5, -.5, null, undefined, [], /./, new Date, new Set, new Map, Promise.resolve(1), (function() { return arguments })()
-])
-
-run('empty',[
-  0, false, null, undefined, [], {}, ''
-], [
-  '0', 1, .1, -.1, [ 1 ], { a: 1 }, true
-])
-
-describe('Is.eql', () => {
-
-  it('Is.eql(1, 1) ', () => {
-
-    const a = 1
-    const b = 1
-
-    assert.equal(Is.eql(a, b), true)
-    assert.equal(Is.not.eql(a, b), false)
-    assert.doesNotThrow(() => Is.eql.assert(a, b))
-    assert.throws(() => Is.not.eql.assert(a, b))
-  })
-
-  it('Is.eql([ 1 ], [ 1 ]) ', () => {
-    const a = [ 1 ]
-    const b = [ 1 ]
-    assert.equal(Is.eql(a, b), true)
-    assert.equal(Is.not.eql(a, b), false)
-    assert.doesNotThrow(() => Is.eql.assert(a, b))
-    assert.throws(() => Is.not.eql.assert(a, b))
-  })
-
-  it('Is.eql({ a: [ 1 ] }, { a: [ 1 ] }) ', () => {
-    const a = { a: [ 1 ] }
-    const b = { a: [ 1 ] }
-    assert.equal(Is.eql(a, b), true)
-    assert.equal(Is.not.eql(a, b), false)
-    assert.doesNotThrow(() => Is.eql.assert(a, b))
-    assert.throws(() => Is.not.eql.assert(a, b))
-  })
-
-  it('Is.eql(func, func) ', () => {
-    const a = console.log
-    const b = console.log
-    assert.equal(Is.eql(a, b), true)
-    assert.equal(Is.not.eql(a, b), false)
-    assert.doesNotThrow(() => Is.eql.assert(a, b))
-    assert.throws(() => Is.not.eql.assert(a, b))
-  })
-
-  it('Is.eql(Date, Date) ', () => {
-    const a = new Date(2018, 1, 1)
-    const b = new Date(2018, 1, 1)
-    assert.equal(Is.eql(a, b), true)
-    assert.equal(Is.not.eql(a, b), false)
-    assert.doesNotThrow(() => Is.eql.assert(a, b))
-    assert.throws(() => Is.not.eql.assert(a, b))
-  })
-
-  it('Is.eql(Regex, Regex) ', () => {
-    const a = /.*/
-    const b = /.*/
-    assert.equal(Is.eql(a, b), true)
-    assert.equal(Is.not.eql(a, b), false)
-    assert.doesNotThrow(() => Is.eql.assert(a, b))
-    assert.throws(() => Is.not.eql.assert(a, b))
-  })
-
-  it('Is.not.eql({ a: [ 1 ] }, { a: [ 2 ] }) ', () => {
-    const a = { a: [ 1 ] }
-    const b = { a: [ 2 ] }
-    assert.equal(Is.eql(a, b), false)
-    assert.equal(Is.not.eql(a, b), true)
-    assert.throws(() => Is.eql.assert(a, b))
-    assert.doesNotThrow(() => Is.not.eql.assert(a, b))
-  })
-
-  it('Is.not.eql(true, "true") ', () => {
-    const a = true
-    const b = "true"
-    assert.equal(Is.eql(a, b), false)
-    assert.equal(Is.not.eql(a, b), true)
-    assert.throws(() => Is.eql.assert(a, b))
-    assert.doesNotThrow(() => Is.not.eql.assert(a, b))
-  })
-
-  it('Is.not.eql(1, 2) ', () => {
-    const a = 1
-    const b = 2
-    assert.equal(Is.eql(a, b), false)
-    assert.equal(Is.not.eql(a, b), true)
-    assert.throws(() => Is.eql.assert(a, b))
-    assert.doesNotThrow(() => Is.not.eql.assert(a, b))
-  })
+  notThrow(...e) {
+    assert.doesNotThrow(a, ...e)
+  }
 })
 
 describe('Is', () => {
-  it('Is(undefine)', () => {
-    const x = undefined
-    assert.equal(Is(x), false)
-    assert.equal(Is.not(x), true)
-    assert.throws(() => Is.assert(x))
-    assert.doesNotThrow(() => Is.not.assert(x))
-  })
+  it('Is() should return false', () => expect(Is()).eq(false))
+  it('Is(null) should return false', () => expect(Is(null)).eq(false))
+  it('Is(undefined) should return false', () => expect(Is(undefined)).eq(false))
 
-  it('Is(null)', () => {
-    const x = null
-    assert.equal(Is(x), false)
-    assert.equal(Is.not(x), true)
-    assert.throws(() => Is.assert(x))
-    assert.doesNotThrow(() => Is.not.assert(x))
-  })
+  it('Is.not() should return true', () => expect(Is.not()).eq(true))
+  it('Is.not(null) should return true', () => expect(Is.not(null)).eq(true))
+  it('Is.not(undefined) should return true', () => expect(Is.not(undefined)).eq(true))
 
-  it('Is(1)', () => {
-    const x = 1
-    assert.equal(Is(x), true)
-    assert.equal(Is.not(x), false)
-    assert.throws(() => Is.not.assert(x))
-    assert.doesNotThrow(() => Is.assert(x))
-  })
 
+  it('Is.asrt() should throw and Error', () => expect(() => { Is.asrt() }).throws())
+  it('Is.asrt(null) should throw and Error', () => expect(() => { Is.asrt(null) }).throws())
+  it('Is.asrt(undefined) should throw and Error', () => expect(() => { Is.asrt(undefined) }).throws())
+
+  it('Is.not.asrt() should not throw', () => expect(() => { Is.not.asrt() }).notThrow())
+  it('Is.not.asrt(null) should not throw', () => expect(() => { Is.not.asrt(null) }).notThrow())
+  it('Is.not.asrt(undefined) should not throw', () => expect(() => { Is.not.asrt(undefined) }).notThrow())
 })
 
-describe('Is.it', () => {
-
-  it('Is.it(Promise.resolve(), Promise)', () => {
-    const a = Promise.resolve()
-    const b = 'Promise'
-
-    assert.equal(Is.it(a, b), true)
-    assert.doesNotThrow(() => Is.it.assert(a, b))
-
-    assert.equal(Is.not.it(a, b), false)
-    assert.throws(() => Is.not.it.assert(a, b))
-  })
-
-  it('Is.it(new Date, Date)', () => {
-    const a = new Date
-    const b = 'Object'
-
-    assert.equal(Is.it(a, b), false)
-    assert.throws(() => Is.it.assert(a, b))
-
-    assert.equal(Is.not.it(a, b), true)
-    assert.doesNotThrow(() => Is.not.it.assert(a, b))
-  })
-
+describe('Is.a', () => {
+  it('Is.a() should return false', () => expect(Is.a()).eq(false))
+  it('Is.not.a() should return true', () => expect(Is.not.a()).eq(true))
+  it('Is.a([]) should return true', () => expect(Is.a([])).eq(true))
+  it('Is.not.a([]) should return false', () => expect(Is.not.a([])).eq(false))
+  it('Is.a.asrt() should throw an Error', () => expect(() => Is.a.asrt(null, 'Must be array')).throws())
+  it('Is.a.asrt([]) should not throw an Error', () => expect(() => Is.a.asrt([], 'Must be array')).notThrow())
+  it('Is.not.a.asrt([]) should throw an Error', () => expect(() => Is.not.a.asrt([], 'Must not be array')).throws())
+  it('Is.not.a.asrt() should not throw an Error', () => expect(() => Is.not.a.asrt(null, 'Must not be array')).notThrow())
 })
 
-describe('Is.assert', () => {
-  const x = undefined
-  const message = 'Epic Fail'
+describe('Is.empty', () => {
+  it(`  0    - empty = true`,  () => expect(Is.empty(0)).eq(true))
+  it(` " "   - empty = true`,  () => expect(Is.empty('')).eq(true))
+  it(` { }   - empty = true`,  () => expect(Is.empty({})).eq(true))
+  it(` [ ]   - empty = true`,  () => expect(Is.empty([])).eq(true))
 
-  it('NOPE: Is.assert(undefined)', () => {
-    assert.throws(() => {
-      Is.assert(x, message)
-    }, { message })
-  })
+  it(`   1   - empty = false`,  () => expect(Is.empty(1)).eq(false))
+  it(` " * " - empty = false`,  () => expect(Is.empty('*')).eq(false))
+  it(` { a } - empty = false`,  () => expect(Is.empty({a:1})).eq(false))
+  it(` [ 1 ] - empty = false`,  () => expect(Is.empty([1])).eq(false))
 
-  it('OK: Is.not.assert(undefined)', () => {
-    assert.doesNotThrow(() => {
-      Is.not.assert(x, message)
-    }, { message })
-  })
+  it(`  0  - not.empty = false`,  () => expect(Is.not.empty(0)).eq(false))
+  it(` " " - not.empty = false`,  () => expect(Is.not.empty('')).eq(false))
+  it(` { } - not.empty = false`,  () => expect(Is.not.empty({})).eq(false))
+  it(` [ ] - not.empty = false`,  () => expect(Is.not.empty([])).eq(false))
+
+  it(`   1   - not.empty = true`,  () => expect(Is.not.empty(1)).eq(true))
+  it(` " * " - not.empty = true`,  () => expect(Is.not.empty('*')).eq(true))
+  it(` { a } - not.empty = true`,  () => expect(Is.not.empty({a:1})).eq(true))
+  it(` [ 1 ] - not.empty = true`,  () => expect(Is.not.empty([1])).eq(true))
+
+  it(`  0    - empty.assert = ok`,  () => expect(() => Is.empty.asrt(0)).notThrow())
+  it(` " "   - empty.assert = ok`,  () => expect(() => Is.empty.asrt('')).notThrow())
+  it(` { }   - empty.assert = ok`,  () => expect(() => Is.empty.asrt({})).notThrow())
+  it(` [ ]   - empty.assert = ok`,  () => expect(() => Is.empty.asrt([])).notThrow())
+
+  it(`   1   - empty.assert = Error`,  () => expect(() => Is.empty.asrt(1)).throws())
+  it(` " * " - empty.assert = Error`,  () => expect(() => Is.empty.asrt('*')).throws())
+  it(` { a } - empty.assert = Error`,  () => expect(() => Is.empty.asrt({a:1})).throws())
+  it(` [ 1 ] - empty.assert = Error`,  () => expect(() => Is.empty.asrt([1])).throws())
+
+  it(`  0  - not.empty.assert = Error`,  () => expect(() => Is.not.empty.asrt(0)).throws())
+  it(` " " - not.empty.assert = Error`,  () => expect(() => Is.not.empty.asrt('')).throws())
+  it(` { } - not.empty.assert = Error`,  () => expect(() => Is.not.empty.asrt({})).throws())
+  it(` [ ] - not.empty.assert = Error`,  () => expect(() => Is.not.empty.asrt([])).throws())
+
+  it(`   1   - not.empty.assert = ok`,  () => expect(() => Is.not.empty.asrt(1)).notThrow())
+  it(` " * " - not.empty.assert = ok`,  () => expect(() => Is.not.empty.asrt('*')).notThrow())
+  it(` { a } - not.empty.assert = ok`,  () => expect(() => Is.not.empty.asrt({a:1})).notThrow())
+  it(` [ 1 ] - not.empty.assert = ok`,  () => expect(() => Is.not.empty.asrt([1])).notThrow())
+
 
 })
