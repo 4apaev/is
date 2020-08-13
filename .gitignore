@@ -3,5 +3,6 @@
 .vscode
 .history
 .nyc_output
+coverage
 output
 node_modules

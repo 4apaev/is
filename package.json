@@ -1,24 +1,24 @@
 {
-  "name":        "is",
-  "version":     "1.0.0",
+  "name": "is",
+  "version": "1.5.0",
   "description": "type check util",
-  "license":     "ISC",
-  "type":        "module",
-  "main":        "is.js",
-  "author":      {
+  "license": "ISC",
+  "type": "module",
+  "main": "is.js",
+  "author": {
     "name": "Michael Miretski",
     "email": "4apaev@gmail.com"
   },
-  "repository":  {
+  "repository": {
     "type": "git",
     "url": "git@github.com:4apaev/is.git"
   },
-  "scripts":     {
-    "test": "nyc mocha is.spec.js",
-    "nyc":  "nyc instrument . ./output"
+  "scripts": {
+    "test": "mocha is.spec.js",
+    "cover": "npx c8 --check-coverage npm run test"
   },
   "devDependencies": {
-    "nyc": "^15.0.1",
-    "mocha": "^7.1.2"
+    "c8": "^7.3.0",
+    "mocha": "^8.1.1"
   }
 }
