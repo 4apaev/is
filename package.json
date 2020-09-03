@@ -20,7 +20,7 @@
     "url": "git@github.com:4apaev/is.git"
   },
   "scripts":     {
-    "test":  "mocha lib/is.spec.js",
+    "test":  "mocha is.spec.js",
     "cover": "npx c8 --check-coverage npm run test"
   },
   "devDependencies": {

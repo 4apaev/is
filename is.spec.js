@@ -1,5 +1,5 @@
 import assert from 'assert'
-import Is from './is.js'
+import Is from './index.js'
 
 const expect = a => ({
   eq(e, m) {
