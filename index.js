@@ -1,20 +1,8 @@
-import Is from "./lib/is.js"
+// import define, { alias } from './lib/define.js'
 
-import {
- fill,
- echo,
- where,
- remove,
-} from "./lib/util.js"
-
-import claim from "./lib/claim.js"
-import define, {
-  alias
-} from "./lib/define.js"
-
-export default Is
-export {
-  define,
-  claim,
-
-}
+export * from "./lib/is.js"
+export * from './lib/claim.js'
+export * from "./lib/define.js"
+export * from "./lib/util.js"
+// { default as define }
+// export  { alias, default as define } from "./lib/define.js"
