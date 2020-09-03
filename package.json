@@ -4,7 +4,12 @@
   "description": "type check util",
   "license": "ISC",
   "type": "module",
-  "main": "is.js",
+  "module": "is.js",
+  "files": [
+    "lib/claim.js",
+    "lib/define.js",
+    "lib/util.js"
+  ],
   "author": {
     "name": "Michael Miretski",
     "email": "4apaev@gmail.com"
