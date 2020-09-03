@@ -5,10 +5,11 @@
   "license": "ISC",
   "type": "module",
   "module": "is.js",
+  "folders": ["lib"],
   "files": [
-    "lib/claim.js",
-    "lib/define.js",
-    "lib/util.js"
+    "./lib/claim.js",
+    "./lib/define.js",
+    "./lib/util.js"
   ],
   "author": {
     "name": "Michael Miretski",
