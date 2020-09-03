@@ -1,17 +1,17 @@
 {
-  "name": "is",
-  "version": "1.5.0",
+  "name":        "is",
+  "version":     "1.5.0",
   "description": "type check util",
-  "license": "ISC",
-  "type": "module",
-  "module": "is.js",
-  "folders": ["lib"],
-  "files": [
-    "./lib/claim.js",
-    "./lib/define.js",
-    "./lib/util.js"
+  "license":     "ISC",
+  "main":        "index.js",
+  "type":        "module",
+  "files":       [
+    "lib/claim.js",
+    "lib/define.js",
+    "lib/util.js",
+    "lib/is.js"
   ],
-  "author": {
+  "author":      {
     "name": "Michael Miretski",
     "email": "4apaev@gmail.com"
   },
@@ -19,8 +19,8 @@
     "type": "git",
     "url": "git@github.com:4apaev/is.git"
   },
-  "scripts": {
-    "test": "mocha is.spec.js",
+  "scripts":     {
+    "test":  "mocha lib/is.spec.js",
     "cover": "npx c8 --check-coverage npm run test"
   },
   "devDependencies": {
