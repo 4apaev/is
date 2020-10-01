@@ -9,6 +9,7 @@
   "files": [
     "lib/claim.js",
     "lib/define.js",
+    "lib/errors.js",
     "lib/util.js",
     "lib/is.js"
   ],
