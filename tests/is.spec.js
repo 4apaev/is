@@ -1,5 +1,5 @@
 import assert from 'assert'
-import Is from './index.js'
+import Is from '../index.js'
 
 const expect = a => ({
   eq(e, m) {
@@ -59,9 +59,41 @@ describe('Is.a', () => {
   runner('a', [ arr ], [ undefined ])
   runner('a', [ arr ], [ 1 ])
   runner('a', [ arr ], [ 'woof' ])
-  runner('a', [ arr ], [ {} ])
+  runner('a', [ arr ], [{}])
   runner('a', [ arr ], [ new Set ])
   runner('a', [ arr ], [ new Map ])
+})
+
+describe('Is.n', () => {
+  runner('n', [ 0 ], [ '1' ])
+  runner('n', [ 3.14 ], [ true ])
+  runner('n', [ -3.14 ], [ false ])
+  runner('n', [ 0x10 ], [ NaN ])
+})
+
+describe('Is.o', () => {
+  runner('o', [{}], [ null ])
+  runner('o', [[]], [ true ])
+  runner('o', [ new Date ], [ false ])
+  runner('o', [ new Set ], [ '' ])
+  runner('o', [ new Map ], [ function () {} ])
+})
+
+describe('Is.s', () => {
+  runner('s', [ '' ], [ true ])
+  runner('s', [ '0' ], [ 0 ])
+})
+
+describe('Is.b', () => {
+  runner('b', [ true  ], [ null ])
+  runner('b', [ false  ], [ 0 ])
+})
+
+describe('Is.f', () => {
+  runner('f', [ String ], [ '' ])
+  runner('f', [ Function ], [ true ])
+  runner('f', [ function () {} ], [ 0 ])
+  runner('f', [ x => x  ], [ null ])
 })
 
 describe('Is.it', () => {
@@ -74,28 +106,27 @@ describe('Is.eq', () => {
   runner('eq', [  'doggo',     'doggo' ],  [  'woof', 'bork' ])
   runner('eq', [[ 'doggo' ], [ 'doggo' ]], [[ 'doggo' ], 0 ])
   runner('eq', [
-    { a: { b: { c: { d: 'bork'}}}},
-    { a: { b: { c: { d: 'bork'}}}},
+    { a: { b: { c: { d: 'bork' }}}},
+    { a: { b: { c: { d: 'bork' }}}},
   ], [
-    { a: { b: { c: { d: 'bork'}}}},
-    { a: { b: { c: { d: 'bork'}}, woof: true }},
+    { a: { b: { c: { d: 'bork' }}}},
+    { a: { b: { c: { d: 'bork' }}, woof: true }},
   ])
 })
 
-
-describe('Is.empty', () => {
-  runner('empty', [ 0     ], [ 1 ])
-  runner('empty', [ ''    ], [ 'woof' ])
-  runner('empty', [ null  ], [ -1 ])
-  runner('empty', [ false ], [ true ])
-  runner('empty', [ false ], [ true ])
-  runner('empty', [ { }   ], [ { x: false } ])
-  runner('empty', [ [ ]   ], [ [ 0 ] ])
+describe('Is.em', () => {
+  runner('em', [ 0     ], [ 1 ])
+  runner('em', [ ''    ], [ 'woof' ])
+  runner('em', [ null  ], [ -1 ])
+  runner('em', [ false ], [ true ])
+  runner('em', [ false ], [ true ])
+  runner('em', [{ }], [{ x: false }])
+  runner('em', [[ ]], [[ 0 ]])
 })
 
 describe('Is.get', () => {
-  const a = { a: { b: { c: { bork: 1, woof: 0, d: [ 'doggo' ] }}}}
-  const b = { a: { b: { c: { bork: 0, woof: 1, d: [ 'pupper' ] }}}}
+  const a = { a: { b: { c: { bork: 1, woof: 0, d: [ 'doggo' ]}}}}
+  const b = { a: { b: { c: { bork: 0, woof: 1, d: [ 'pupper' ]}}}}
 
   it('should return fallback if first argument is not an object', () => {
     assert.strictEqual(Is.get(null, 'a.b.c'), undefined)
