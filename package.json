@@ -1,30 +1,37 @@
 {
-  "name":        "is",
-  "version":     "1.5.0",
+  "name": "is",
+  "version": "1.5.1",
   "description": "type check util",
-  "license":     "ISC",
-  "main":        "index.js",
-  "type":        "module",
-  "files":       [
+  "license": "ISC",
+  "main": "index.js",
+  "type": "module",
+
+  "files": [
     "lib/claim.js",
     "lib/define.js",
     "lib/util.js",
     "lib/is.js"
   ],
-  "author":      {
+
+  "author": {
     "name": "Michael Miretski",
     "email": "4apaev@gmail.com"
   },
+
   "repository": {
     "type": "git",
     "url": "git@github.com:4apaev/is.git"
   },
-  "scripts":     {
-    "test":  "mocha is.spec.js",
-    "cover": "npx c8 --check-coverage npm run test"
+
+  "scripts": {
+    "test": "mocha tests/*.spec.js",
+    "lint": "eslint --fix index.js lib",
+    "cover": "c8 --check-coverage npm run test"
   },
+
   "devDependencies": {
     "c8": "^7.3.0",
-    "mocha": "^8.1.1"
+    "mocha": "^8.1.1",
+    "eslint": "^7.10.0"
   }
 }

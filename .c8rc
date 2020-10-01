@@ -9,6 +9,12 @@
     "lcov"
   ],
 
+  "exclude": [
+    "tests/*.js",
+    "index.js",
+    "lib/claim.js"
+  ],
+
   "clean": true,
   "per-file": true,
   "check-coverage": true
