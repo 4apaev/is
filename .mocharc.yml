@@ -1,4 +1,0 @@
-exit: true
-check-leaks: true
-extension:
-  - js
